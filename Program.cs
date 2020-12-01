@@ -6,7 +6,7 @@ namespace Internship_3_oop_intro
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            
         }
     }
 }

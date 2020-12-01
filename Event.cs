@@ -13,5 +13,7 @@ namespace Internship_3_oop_intro
         }
         public DateTime StartTime{get;set;}
         public DateTime EndTime{get;set;}
+
+        public Person [] Attendants;
     }
 }

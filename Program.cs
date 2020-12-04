@@ -17,7 +17,7 @@ namespace Internship_3_oop_intro
 
             while(true){
                 var userChoice = PrintMenuAndGetUserChoice();
-
+                
             }
 
         }

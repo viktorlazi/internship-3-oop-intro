@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Internship_3_oop_intro
 {
@@ -22,6 +23,6 @@ namespace Internship_3_oop_intro
         public DateTime StartTime{get;set;}
         public DateTime EndTime{get;set;}
 
-        public Person [] Attendants;
+        public List<Person> Attendants;
     }
 }

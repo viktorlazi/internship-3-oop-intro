@@ -16,23 +16,26 @@ namespace Internship_3_oop_intro
         static void Main(string[] args)
         {
 
-            var exampleEvent1 = new Event();
-            var exampleEvent2 = new Event();
+            var exampleEvent1 = new Event("Kafa ujutro", EventTypeEnum.Coffee, new DateTime(2020, 12, 5, 9, 30, 0), 
+                                                                               new DateTime(2020, 12, 5, 10, 30, 0));
 
-            var peopleAndEventList = new Dictionary<Event, Person[]>(){
+            var exampleEvent2 = new Event("Ucenje", EventTypeEnum.StudySession, new DateTime(2020, 12, 5, 1, 30, 0),
+                                                                                new DateTime(2020, 12, 5, 2, 30, 0));
+
+            var eventList = new Dictionary<Event, List<Person>>(){
                 {exampleEvent1, exampleEvent1.Attendants},
                 {exampleEvent2, exampleEvent2.Attendants}
             };
 
             while(true){
-                var userChoice = PrintMenuAndGetUserChoice();
-                ProgramMenuHandleByChoice(userChoice);
+                var userChoice = PrintMainMenuAndGetUserChoice();
+                MainMenuHandleByChoice(userChoice, eventList);
 
             }
 
         }
 
-        static int PrintMenuAndGetUserChoice(){
+        static int PrintMainMenuAndGetUserChoice(){
             Console.Clear();
             Console.WriteLine("1. Dodavanje eventa");
             Console.WriteLine("2. Brisanje eventa");
@@ -64,10 +67,10 @@ namespace Internship_3_oop_intro
             Console.ReadLine();
         }
 
-        static void ProgramMenuHandleByChoice(int userChoice){
+        static void MainMenuHandleByChoice(int userChoice, Dictionary<Event, List <Person>> eventList){
             switch(userChoice){
                 case 1:
-                    AddingEvent();
+                    AddingEvent(eventList);
                     break;
                 case 2:
                     break;
@@ -91,9 +94,8 @@ namespace Internship_3_oop_intro
 
         static bool UserConfirmation(string message = ""){ 
 
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Yellow;
 
-            System.Console.WriteLine();
             if(message != ""){System.Console.WriteLine(message);} 
 
             while(true){
@@ -115,13 +117,105 @@ namespace Internship_3_oop_intro
             } 
         }
 
+        static int ReadLineEventTypeEnum(){
+            var userInput = Console.ReadLine();
+
+            switch(userInput){
+                case "Coffee": return 0;
+                case "Lecture": return 1;
+                case "Concert": return 2;
+                case "StudySession": return 3;
+                default: return 404;
+            }
+        }
+
+        static bool ReadLineDateTime(out DateTime parsed){
+            var userDateTime = Console.ReadLine();
+
+            if(DateTime.TryParse(userDateTime, out DateTime parsedInput)){
+                parsed = parsedInput;
+                return true;
+            }else{
+                parsed = parsedInput;
+                return false;
+            }
+            
+        }
+
+        static bool CheckDateTimeValidity(DateTime startTime, DateTime endTime, Dictionary<Event, List<Person>> eventList){
+            if(startTime > endTime){
+                System.Console.WriteLine("Event nemoze zavrsiti prije nego pocne");
+                return false;
+            }
+            // ------1-------2---2---1-----
+            var overlap = false;
+            foreach(var _event in eventList.Keys){
+                if(!(startTime > _event.EndTime || endTime < _event.StartTime)){
+                    System.Console.WriteLine($"Event se preklapa sa \"{_event.Name}\"");
+                    overlap = true;
+                }
+            }
+            if(overlap){return false;}
+
+            return true;
+            
+        }
         
         ////////////////////////////
         //       1 - 6 cases      //
         ////////////////////////////
 
-        static void AddingEvent(){ 
+        static void AddingEvent(Dictionary<Event, List<Person>> eventList){ 
             Console.Clear();
+            Console.WriteLine(" -- Upisite detalje eventa -- ");
+            Console.Write("Ime eventa: ");
+            var eventName = Console.ReadLine();
+            
+            Console.WriteLine("Tip eventa (Coffee, Lecture, Concert, StudySession): ");
+            var eventTypeInt = ReadLineEventTypeEnum();
+            if(eventTypeInt == 404){
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                System.Console.WriteLine("Nepostojeci tip eventa!");
+                Console.ForegroundColor = ConsoleColor.White;
+                PressEnterToContinue();
+                return;
+            }
+            var eventType = (EventTypeEnum) eventTypeInt;
+            
+            Console.WriteLine("Pocetak eventa (mm/dd/yyyy hh:mm)");
+            var eventStartTime = new DateTime();
+            if(!ReadLineDateTime(out eventStartTime)){
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                System.Console.WriteLine("Nevaljani datum \nIspravan oblik je mm/dd/yyyy hh:mm");
+                Console.ForegroundColor = ConsoleColor.White;
+
+                PressEnterToContinue();return;
+            }
+
+            Console.WriteLine("Kraj eventa (mm/dd/yyyy hh:mm)");
+            var eventEndTime = new DateTime();
+            if(!ReadLineDateTime(out eventEndTime)){
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                System.Console.WriteLine("Nevaljani datum \nIspravan oblik je yy/mm/dd hh:mm");
+                Console.ForegroundColor = ConsoleColor.White;
+
+                PressEnterToContinue();return;
+            }
+
+
+            if(CheckDateTimeValidity(eventStartTime, eventEndTime, eventList)){
+                if(UserConfirmation("Dodati event?")){
+                    eventList.Add(new Event(eventName, eventType, eventStartTime, eventEndTime), new List<Person>(){});
+                    System.Console.WriteLine("Event je dodan!");
+                }else{
+                    Console.WriteLine("Vracam se u menu");
+                }
+            }else{
+                Console.WriteLine("Promijeni vrijeme eventa");
+            }
+
+
+            PressEnterToContinue();
         }
     }
 }

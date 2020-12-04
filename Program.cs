@@ -37,6 +37,7 @@ namespace Internship_3_oop_intro
 
         static int PrintMainMenuAndGetUserChoice(){
             Console.Clear();
+            Console.WriteLine("Glavni menu");
             Console.WriteLine("1. Dodavanje eventa");
             Console.WriteLine("2. Brisanje eventa");
             Console.WriteLine("3. Edit eventa");
@@ -56,6 +57,26 @@ namespace Internship_3_oop_intro
 
                 PressEnterToContinue();
                 return 0;
+            }
+        }
+        static int PrintSubMenuEventDetailsAndGetUserInput(){
+            Console.Clear();
+            Console.WriteLine("Detalji eventa");
+            Console.WriteLine("1. Ispis detalja eventa u formatu: name – event type – start time – end time – trajanje – ispis broja ljudi na eventu");
+            Console.WriteLine("2. Ispis svih osoba na eventu u formatu: [Redni broj u listi]. name – last name – broj mobitela");
+            Console.WriteLine("3. Ispis svih detalja.");
+            Console.WriteLine("4. Izlaz");
+            var userChoice = Console.ReadLine();
+            if(int.TryParse(userChoice, out int result) 
+                            && result > 0 && result < 5){
+                return result;
+            }else{
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine($"{userChoice} nije valjan unos!");
+                Console.ForegroundColor = ConsoleColor.White;
+
+                PressEnterToContinue();
+                return result;
             }
         }
 
@@ -81,6 +102,7 @@ namespace Internship_3_oop_intro
                 case 5:
                     break;
                 case 6:
+                    while(PrintSubMenuEventDetailsAndGetUserInput()!= 4);
                     break;
                 case 7:
                     Environment.Exit(0);    

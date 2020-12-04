@@ -3,10 +3,19 @@ using System.Collections.Generic;
 
 namespace Internship_3_oop_intro
 {
+
+    public enum _EventType{
+            Coffee,
+            Lecture,
+            Concert,
+            StudySession
+    }
     class Program
     {
+        
         static void Main(string[] args)
         {
+
             var exampleEvent1 = new Event();
             var exampleEvent2 = new Event();
 
@@ -18,7 +27,7 @@ namespace Internship_3_oop_intro
             while(true){
                 var userChoice = PrintMenuAndGetUserChoice();
                 ProgramMenuHandleByChoice(userChoice);
-
+                
             }
 
         }
@@ -77,6 +86,10 @@ namespace Internship_3_oop_intro
                     System.Console.WriteLine("Krivi unos");
                     break;                
             }
+        }
+
+        static void AddingEvent(){
+            
         }
     }
 }

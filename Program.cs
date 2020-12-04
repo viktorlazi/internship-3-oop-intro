@@ -23,14 +23,13 @@ namespace Internship_3_oop_intro
                                                                                 new DateTime(2020, 12, 5, 2, 30, 0));
 
             var eventList = new Dictionary<Event, List<Person>>(){
-                {exampleEvent1, exampleEvent1.Attendants},
-                {exampleEvent2, exampleEvent2.Attendants}
+                {exampleEvent1, new List<Person>(){}},
+                {exampleEvent2, new List<Person>(){}}
             };
 
             while(true){
                 var userChoice = PrintMainMenuAndGetUserChoice();
                 MainMenuHandleByChoice(userChoice, eventList);
-
             }
 
         }
@@ -94,8 +93,10 @@ namespace Internship_3_oop_intro
                     AddingEvent(eventList);
                     break;
                 case 2:
+                    DeleteEvent(eventList);
                     break;
                 case 3:
+                    EditEvent(eventList);
                     break;
                 case 4:
                     break;
@@ -106,11 +107,7 @@ namespace Internship_3_oop_intro
                     break;
                 case 7:
                     Environment.Exit(0);    
-                    break;
-                default:
-                    //impossible
-                    System.Console.WriteLine("Krivi unos");
-                    break;                
+                    break;           
             }
         }
 
@@ -238,6 +235,33 @@ namespace Internship_3_oop_intro
 
 
             PressEnterToContinue();
+        }
+
+        static void DeleteEvent(Dictionary<Event, List<Person>> eventList){
+            Console.Clear();
+            System.Console.WriteLine("Unesite naziv eventa koji zelite unijeti");
+            var userInput = Console.ReadLine();
+
+            var toDelete = new Event();
+            foreach(var _event in eventList.Keys){
+                if(userInput == _event.Name){
+                    toDelete = _event;
+                }
+            }
+
+            if(eventList.Remove(toDelete)){
+                System.Console.WriteLine("Event deleted");
+            }else{
+                System.Console.WriteLine("Could not find {0}", userInput);
+            }
+
+            PressEnterToContinue();
+        }
+
+        static void EditEvent(Dictionary<Event, List<Person>> eventList){
+            Console.Clear();
+
+            
         }
     }
 }

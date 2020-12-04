@@ -7,7 +7,7 @@ namespace Internship_3_oop_intro
         public Event(){
 
         }
-        public Event(string name, _EventType eventType,
+        public Event(string name, EventTypeEnum eventType,
                     DateTime startTime, DateTime endTime){
             Name = name;
             EventType = eventType;
@@ -18,7 +18,7 @@ namespace Internship_3_oop_intro
         public string Name {get;set;}
        
 
-        _EventType EventType{get;set;}
+        EventTypeEnum EventType{get;set;}
         public DateTime StartTime{get;set;}
         public DateTime EndTime{get;set;}
 

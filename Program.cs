@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Internship_3_oop_intro
 {
 
-    public enum _EventType{
+    public enum EventTypeEnum{
             Coffee,
             Lecture,
             Concert,
@@ -27,7 +27,7 @@ namespace Internship_3_oop_intro
             while(true){
                 var userChoice = PrintMenuAndGetUserChoice();
                 ProgramMenuHandleByChoice(userChoice);
-                
+
             }
 
         }
@@ -67,6 +67,7 @@ namespace Internship_3_oop_intro
         static void ProgramMenuHandleByChoice(int userChoice){
             switch(userChoice){
                 case 1:
+                    AddingEvent();
                     break;
                 case 2:
                     break;
@@ -88,8 +89,39 @@ namespace Internship_3_oop_intro
             }
         }
 
-        static void AddingEvent(){
-            
+        static bool UserConfirmation(string message = ""){ 
+
+            Console.ForegroundColor = ConsoleColor.Green;
+
+            System.Console.WriteLine();
+            if(message != ""){System.Console.WriteLine(message);} 
+
+            while(true){
+                System.Console.WriteLine("Jeste li sigurni? d/n: ");
+                Console.ForegroundColor = ConsoleColor.White;
+                var userInput = Console.ReadLine();
+
+                switch(userInput){
+                    case "d": return true;
+                    case "da": return true;
+                    case "ne": return false;
+                    case "n": return false;
+                    default:
+                        System.Console.WriteLine("Pogresan unos.\n" +
+                                        "Dozvoljeni unosi su:\n" +
+                                        "da/ne/d/n \n");
+                        break;
+                }
+            } 
+        }
+
+        
+        ////////////////////////////
+        //       1 - 6 cases      //
+        ////////////////////////////
+
+        static void AddingEvent(){ 
+            Console.Clear();
         }
     }
 }

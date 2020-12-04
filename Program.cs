@@ -17,7 +17,8 @@ namespace Internship_3_oop_intro
 
             while(true){
                 var userChoice = PrintMenuAndGetUserChoice();
-                
+                ProgramMenuHandleByChoice(userChoice);
+
             }
 
         }
@@ -52,6 +53,30 @@ namespace Internship_3_oop_intro
             Console.WriteLine("--- Enter to contiunue ---");
             Console.ForegroundColor = ConsoleColor.White;
             Console.ReadLine();
+        }
+
+        static void ProgramMenuHandleByChoice(int userChoice){
+            switch(userChoice){
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    Environment.Exit(0);    
+                    break;
+                default:
+                    //impossible
+                    System.Console.WriteLine("Krivi unos");
+                    break;                
+            }
         }
     }
 }

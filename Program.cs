@@ -79,14 +79,6 @@ namespace Internship_3_oop_intro
             }
         }
 
-        static void PressEnterToContinue(){
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("\n\n");
-            Console.WriteLine("--- Enter to contiunue ---");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.ReadLine();
-        }
-
         static void MainMenuHandleByChoice(int userChoice, Dictionary<Event, List <Person>> eventList){
             switch(userChoice){
                 case 1:
@@ -161,23 +153,20 @@ namespace Internship_3_oop_intro
             
         }
 
-        static bool CheckDateTimeValidity(DateTime startTime, DateTime endTime, Dictionary<Event, List<Person>> eventList){
+        static bool CheckDateTimeValidity(DateTime startTime, DateTime endTime, Dictionary<Event, List<Person>> eventList, out string msg){
             
-            Console.ForegroundColor = ConsoleColor.DarkRed;
             if(startTime > endTime){
-                System.Console.WriteLine("Event nemoze zavrsiti prije nego pocne");
-                Console.ForegroundColor = ConsoleColor.White;
+                msg = "Event ne moze zavrsiti prije nego pocne.\n";
                 return false;
             }
             if(AreEventTimesOverlapping(startTime, endTime, eventList, out List<string> overlappingEventNames)){
-                System.Console.WriteLine("Event se preklapa sa drugim eventima: ");
+                msg = "Event se preklapa sa drugim eventima: ";
                 foreach(var name in overlappingEventNames){
-                    Console.WriteLine("- " + name);
+                    msg = "- " + name + "\n";
                 }
-                Console.ForegroundColor = ConsoleColor.White;
                 return false;
             }
-            Console.ForegroundColor = ConsoleColor.White;
+            msg = "";
             return true;
             
         }
@@ -205,6 +194,24 @@ namespace Internship_3_oop_intro
             return false;
         }
         
+        static void WarningMessage(string msg){
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            System.Console.WriteLine(msg);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+        static void InvalidInputMessage(string msg){
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            System.Console.WriteLine(msg);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        static void PressEnterToContinue(){
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\n\n");
+            Console.WriteLine("--- Enter to contiunue ---");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.ReadLine();
+        }
         ////////////////////////////
         //       1 - 6 cases      //
         ////////////////////////////
@@ -218,9 +225,7 @@ namespace Internship_3_oop_intro
             Console.WriteLine("Tip eventa (Coffee, Lecture, Concert, StudySession): ");
             var eventTypeInt = ReadLineEventTypeEnum();
             if(eventTypeInt == 404){
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-                System.Console.WriteLine("Nepostojeci tip eventa!");
-                Console.ForegroundColor = ConsoleColor.White;
+                InvalidInputMessage("Nepostojeci tip eventa");
                 PressEnterToContinue();
                 return;
             }
@@ -229,25 +234,19 @@ namespace Internship_3_oop_intro
             Console.WriteLine("Pocetak eventa (mm/dd/yyyy hh:mm)");
             var eventStartTime = new DateTime();
             if(!ReadLineDateTime(out eventStartTime)){
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-                System.Console.WriteLine("Nevaljani datum \nIspravan oblik je mm/dd/yyyy hh:mm");
-                Console.ForegroundColor = ConsoleColor.White;
-
+                InvalidInputMessage("Nevaljani datum \nIspravan oblik je yy/mm/dd hh:mm");
                 PressEnterToContinue();return;
             }
 
             Console.WriteLine("Kraj eventa (mm/dd/yyyy hh:mm)");
             var eventEndTime = new DateTime();
             if(!ReadLineDateTime(out eventEndTime)){
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-                System.Console.WriteLine("Nevaljani datum \nIspravan oblik je yy/mm/dd hh:mm");
-                Console.ForegroundColor = ConsoleColor.White;
-
+                InvalidInputMessage("Nevaljani datum \nIspravan oblik je yy/mm/dd hh:mm");
                 PressEnterToContinue();return;
             }
 
 
-            if(CheckDateTimeValidity(eventStartTime, eventEndTime, eventList)){
+            if(CheckDateTimeValidity(eventStartTime, eventEndTime, eventList, out string warningMessage)){
                 if(UserConfirmation("Dodati event?")){
                     eventList.Add(new Event(eventName, eventType, eventStartTime, eventEndTime), new List<Person>(){});
                     System.Console.WriteLine("Event je dodan!");
@@ -255,7 +254,7 @@ namespace Internship_3_oop_intro
                     Console.WriteLine("Vracam se u menu");
                 }
             }else{
-                Console.WriteLine("Promijeni vrijeme eventa");
+                WarningMessage(warningMessage + "Promijeni vrijeme eventa");
             }
 
 

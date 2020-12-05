@@ -15,7 +15,6 @@ namespace Internship_3_oop_intro
         
         static void Main(string[] args)
         {
-
             var exampleEvent1 = new Event("Kafa ujutro", EventTypeEnum.Coffee, new DateTime(2020, 12, 5, 9, 30, 0), 
                                                                                new DateTime(2020, 12, 5, 10, 30, 0));
 
@@ -89,6 +88,7 @@ namespace Internship_3_oop_intro
                     EditEvent(eventList);
                     break;
                 case 4:
+                    AddPersonToEvent(eventList);
                     break;
                 case 5:
                     break;
@@ -192,6 +192,19 @@ namespace Internship_3_oop_intro
             result = null;
             return false;
         }
+
+        static bool IsPeronOIBValid(Person person, Dictionary<Event, List<Person>> eventList, out string msg){
+            foreach(var attendents in eventList.Values){
+                foreach(var attendent in attendents){
+                    if(attendent.OIB == person.OIB && person != attendent){
+                        msg = "Dvije osobe nemogu imati isti OIB!";
+                        return false;
+                    }
+                }
+            }
+            msg = "";
+            return true;
+        }
         
         static void WarningMessage(string msg){
             Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -211,6 +224,9 @@ namespace Internship_3_oop_intro
             Console.ForegroundColor = ConsoleColor.White;
             ReadLineColor();
         }
+
+
+
 
         static string ReadLineColor(){
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -323,6 +339,37 @@ namespace Internship_3_oop_intro
             }else{
                 InvalidInputMessage("Could not find " + userInput);
             }
+        }
+
+        static void AddPersonToEvent(Dictionary<Event, List<Person>> eventList){
+            Console.Clear();
+            System.Console.WriteLine("Zelite dodati osobu na event.");
+            
+            try{
+                Console.Write("Ime?"); var personName = ReadLineColor();
+                Console.Write("Prezime?"); var personSurname = ReadLineColor();
+                Console.Write("OIB?"); var personOIB = int.Parse(ReadLineColor());
+                Console.Write("Broj mobitela?"); var personPhoneNum = int.Parse(ReadLineColor());
+
+                var person = new Person(personName, personSurname, personOIB, personPhoneNum);
+
+                if(IsPeronOIBValid(person, eventList, out string msg)){
+                    Console.WriteLine();
+                    Console.Write("Na koji event covik ide?");
+                    if(GetEventKeyByName(ReadLineColor(), eventList, out var eventKey)){
+                        eventList[eventKey].Add(person);
+                    }else{
+                        InvalidInputMessage("Ne postoji uneseni event");
+                    }
+                }else{
+                    InvalidInputMessage(msg);
+                }
+
+            }catch{
+                InvalidInputMessage("Podaci covjeka nisu ispravni :(");
+            }
+
+            
         }
     }
 }

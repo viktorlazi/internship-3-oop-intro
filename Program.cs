@@ -30,6 +30,8 @@ namespace Internship_3_oop_intro
             while(true){
                 var userChoice = PrintMainMenuAndGetUserChoice();
                 MainMenuHandleByChoice(userChoice, eventList);
+                
+                PressEnterToContinue();
             }
 
         }
@@ -45,7 +47,7 @@ namespace Internship_3_oop_intro
             Console.WriteLine("6. Ispis detalja eventa");
             Console.WriteLine("7. Prekid rada");
             
-            var userChoice = Console.ReadLine();
+            var userChoice = ReadLineColor();
             if(int.TryParse(userChoice, out int result) 
                             && result > 0 && result < 8){
                 return result;
@@ -53,8 +55,6 @@ namespace Internship_3_oop_intro
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine($"{userChoice} nije valjan unos!");
                 Console.ForegroundColor = ConsoleColor.White;
-
-                PressEnterToContinue();
                 return 0;
             }
         }
@@ -65,7 +65,7 @@ namespace Internship_3_oop_intro
             Console.WriteLine("2. Ispis svih osoba na eventu u formatu: [Redni broj u listi]. name – last name – broj mobitela");
             Console.WriteLine("3. Ispis svih detalja.");
             Console.WriteLine("4. Izlaz");
-            var userChoice = Console.ReadLine();
+            var userChoice = ReadLineColor();
             if(int.TryParse(userChoice, out int result) 
                             && result > 0 && result < 5){
                 return result;
@@ -73,8 +73,6 @@ namespace Internship_3_oop_intro
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine($"{userChoice} nije valjan unos!");
                 Console.ForegroundColor = ConsoleColor.White;
-
-                PressEnterToContinue();
                 return result;
             }
         }
@@ -100,6 +98,7 @@ namespace Internship_3_oop_intro
                 case 7:
                     Environment.Exit(0);    
                     break;           
+                    
             }
         }
 
@@ -112,7 +111,7 @@ namespace Internship_3_oop_intro
             while(true){
                 System.Console.WriteLine("Jeste li sigurni? d/n: ");
                 Console.ForegroundColor = ConsoleColor.White;
-                var userInput = Console.ReadLine();
+                var userInput = ReadLineColor();
 
                 switch(userInput){
                     case "d": return true;
@@ -128,20 +127,20 @@ namespace Internship_3_oop_intro
             } 
         }
 
-        static int ReadLineEventTypeEnum(){
-            var userInput = Console.ReadLine();
+        static bool ReadLineEventTypeEnum(out int result){
+            var userInput = ReadLineColor();
 
             switch(userInput){
-                case "Coffee": return 0;
-                case "Lecture": return 1;
-                case "Concert": return 2;
-                case "StudySession": return 3;
-                default: return 404;
+                case "Coffee": result = 0; return true;
+                case "Lecture": result = 1; return true;
+                case "Concert": result = 2; return true;
+                case "StudySession": result = 3; return true;
+                default: result = 404; return false;
             }
         }
 
         static bool ReadLineDateTime(out DateTime parsed){
-            var userDateTime = Console.ReadLine();
+            var userDateTime = ReadLineColor();
 
             if(DateTime.TryParse(userDateTime, out DateTime parsedInput)){
                 parsed = parsedInput;
@@ -210,7 +209,14 @@ namespace Internship_3_oop_intro
             Console.WriteLine("\n\n");
             Console.WriteLine("--- Enter to contiunue ---");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.ReadLine();
+            ReadLineColor();
+        }
+
+        static string ReadLineColor(){
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            string input = Console.ReadLine();
+            Console.ForegroundColor = ConsoleColor.White;
+            return input;
         }
         ////////////////////////////
         //       1 - 6 cases      //
@@ -220,29 +226,25 @@ namespace Internship_3_oop_intro
             Console.Clear();
             Console.WriteLine(" -- Upisite detalje eventa -- ");
             Console.Write("Ime eventa: ");
-            var eventName = Console.ReadLine();
+            var eventName = ReadLineColor();
             
             Console.WriteLine("Tip eventa (Coffee, Lecture, Concert, StudySession): ");
-            var eventTypeInt = ReadLineEventTypeEnum();
-            if(eventTypeInt == 404){
-                InvalidInputMessage("Nepostojeci tip eventa");
-                PressEnterToContinue();
-                return;
-            }
-            var eventType = (EventTypeEnum) eventTypeInt;
+                if(!ReadLineEventTypeEnum(out int eventTypeInt)){
+                    InvalidInputMessage("Nepostojeci tip eventa");
+                    return;
+                }
+                var eventType = (EventTypeEnum) eventTypeInt;
             
             Console.WriteLine("Pocetak eventa (mm/dd/yyyy hh:mm)");
-            var eventStartTime = new DateTime();
-            if(!ReadLineDateTime(out eventStartTime)){
+            if(!ReadLineDateTime(out DateTime eventStartTime)){
                 InvalidInputMessage("Nevaljani datum \nIspravan oblik je yy/mm/dd hh:mm");
-                PressEnterToContinue();return;
+                return;
             }
 
             Console.WriteLine("Kraj eventa (mm/dd/yyyy hh:mm)");
-            var eventEndTime = new DateTime();
-            if(!ReadLineDateTime(out eventEndTime)){
+            if(!ReadLineDateTime(out DateTime eventEndTime)){
                 InvalidInputMessage("Nevaljani datum \nIspravan oblik je yy/mm/dd hh:mm");
-                PressEnterToContinue();return;
+                return;
             }
 
 
@@ -258,22 +260,19 @@ namespace Internship_3_oop_intro
             }
 
 
-            PressEnterToContinue();
         }
 
         static void DeleteEvent(Dictionary<Event, List<Person>> eventList){
             Console.Clear();
             System.Console.WriteLine("Unesite naziv eventa koji zelite izbrisati");
-            var userInput = Console.ReadLine();
+            var userInput = ReadLineColor();
 
             if(GetEventKeyByName(userInput, eventList, out Event key)){
                 eventList.Remove(key);
                 System.Console.WriteLine("Event deleted");
             }else{
-                System.Console.WriteLine("Could not find {0}", userInput);
+                InvalidInputMessage("Could not find " + userInput);
             }
-
-            PressEnterToContinue();
         }
 
 
@@ -281,19 +280,49 @@ namespace Internship_3_oop_intro
         static void EditEvent(Dictionary<Event, List<Person>> eventList){
             Console.Clear();
             System.Console.WriteLine("Unesite naziv eventa koji zelite editati");
-            var userInput = Console.ReadLine();
+            var userInput = ReadLineColor();
             
             if(GetEventKeyByName(userInput, eventList, out Event key)){
-                System.Console.WriteLine("");
+                System.Console.WriteLine("Unesite nove podatke za " + key.Name);
                 
+                Console.Write("Ime eventa: ");
+                var eventName = ReadLineColor();
+                
+                Console.WriteLine("Tip eventa (Coffee, Lecture, Concert, StudySession): ");
+                if(!ReadLineEventTypeEnum(out int eventTypeInt)){
+                    InvalidInputMessage("Nepostojeci tip eventa");
+                    return;
+                }
+                var eventType = (EventTypeEnum) eventTypeInt;
+                
+                Console.WriteLine("Pocetak eventa (mm/dd/yyyy hh:mm)");
+                if(!ReadLineDateTime(out DateTime eventStartTime)){
+                    InvalidInputMessage("Nevaljani datum \nIspravan oblik je yy/mm/dd hh:mm");
+                    return;
+                }
+
+                Console.WriteLine("Kraj eventa (mm/dd/yyyy hh:mm)");
+                if(!ReadLineDateTime(out DateTime eventEndTime)){
+                    InvalidInputMessage("Nevaljani datum \nIspravan oblik je yy/mm/dd hh:mm");
+                    return;
+                }
+
+
+                if(CheckDateTimeValidity(eventStartTime, eventEndTime, eventList, out string warningMessage)){
+                    if(UserConfirmation("Promijeniti event?")){
+                        eventList.Remove(key);
+                        eventList.Add(new Event(eventName, eventType, eventStartTime, eventEndTime), new List<Person>(){});
+                        System.Console.WriteLine("Event je promijenjen!");
+                    }else{
+                        Console.WriteLine("Vracam se u menu");
+                    }
+                }else{
+                    WarningMessage(warningMessage + "Promijeni vrijeme eventa");
+                }
 
             }else{
-                System.Console.WriteLine("Could not find {0}", userInput);
+                InvalidInputMessage("Could not find " + userInput);
             }
-
-            PressEnterToContinue();
-            
-            
         }
     }
 }

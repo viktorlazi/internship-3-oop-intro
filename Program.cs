@@ -51,9 +51,7 @@ namespace Internship_3_oop_intro
                             && result > 0 && result < 8){
                 return result;
             }else{
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine($"{userChoice} nije valjan unos!");
-                Console.ForegroundColor = ConsoleColor.White;
+                InvalidInputMessage(userChoice + " nije valjan unos");
                 return 0;
             }
         }
@@ -69,9 +67,7 @@ namespace Internship_3_oop_intro
                             && result > 0 && result < 5){
                 return result;
             }else{
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine($"{userChoice} nije valjan unos!");
-                Console.ForegroundColor = ConsoleColor.White;
+                InvalidInputMessage(userChoice + " nije valjan unos");
                 return result;
             }
         }
@@ -124,9 +120,7 @@ namespace Internship_3_oop_intro
         }
 
         static bool UserConfirmation(string message = ""){ 
-
             Console.ForegroundColor = ConsoleColor.Yellow;
-
             if(message != ""){System.Console.WriteLine(message);} 
 
             while(true){
@@ -162,7 +156,6 @@ namespace Internship_3_oop_intro
 
         static bool ReadLineDateTime(out DateTime parsed){
             var userDateTime = ReadLineColor();
-
             if(DateTime.TryParse(userDateTime, out DateTime parsedInput)){
                 parsed = parsedInput;
                 return true;
@@ -174,7 +167,6 @@ namespace Internship_3_oop_intro
         }
 
         static bool CheckDateTimeValidity(DateTime startTime, DateTime endTime, Dictionary<Event, List<Person>> eventList, out string msg){
-            
             if(startTime > endTime){
                 msg = "Event ne moze zavrsiti prije nego pocne.\n";
                 return false;
@@ -187,8 +179,7 @@ namespace Internship_3_oop_intro
                 return false;
             }
             msg = "";
-            return true;
-            
+            return true;            
         }
 
         static bool AreEventTimesOverlapping(DateTime startTime, DateTime endTime, Dictionary<Event, List<Person>> eventList, out List<string> overlappingEventNames){
@@ -202,7 +193,6 @@ namespace Internship_3_oop_intro
             }
             return overlap;
         }
-
         static bool GetEventKeyByName(string name, Dictionary<Event, List<Person>> eventList, out Event result){
             foreach(var _event in eventList.Keys){
                 if(name == _event.Name){
@@ -295,7 +285,6 @@ namespace Internship_3_oop_intro
                 return;
             }
 
-
             if(CheckDateTimeValidity(eventStartTime, eventEndTime, eventList, out string warningMessage)){
                 if(UserConfirmation("Dodati event?")){
                     eventList.Add(new Event(eventName, eventType, eventStartTime, eventEndTime), new List<Person>(){});
@@ -354,7 +343,6 @@ namespace Internship_3_oop_intro
                     InvalidInputMessage("Nevaljani datum \nIspravan oblik je yy/mm/dd hh:mm");
                     return;
                 }
-
 
                 if(CheckDateTimeValidity(eventStartTime, eventEndTime, eventList, out string warningMessage)){
                     if(UserConfirmation("Promijeniti event?")){

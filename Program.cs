@@ -58,9 +58,9 @@ namespace Internship_3_oop_intro
         static int PrintSubMenuEventDetailsAndGetUserInput(){
             Console.Clear();
             Console.WriteLine("Detalji eventa");
-            Console.WriteLine("1. Ispis detalja eventa u formatu: name – event type – start time – end time – trajanje – ispis broja ljudi na eventu");
-            Console.WriteLine("2. Ispis svih osoba na eventu u formatu: [Redni broj u listi]. name – last name – broj mobitela");
-            Console.WriteLine("3. Ispis svih detalja.");
+            Console.WriteLine("1. Ispis detalja eventa");
+            Console.WriteLine("2. Ispis svih osoba na eventu");
+            Console.WriteLine("3. Ispis svih detalja");
             Console.WriteLine("4. Izlaz");
             var userChoice = ReadLineColor();
             if(int.TryParse(userChoice, out int result) 

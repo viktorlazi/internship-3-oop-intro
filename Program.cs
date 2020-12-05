@@ -381,7 +381,7 @@ namespace Internship_3_oop_intro
                 Console.Write("Ime?"); var personName = ReadLineColor();
                 Console.Write("Prezime?"); var personSurname = ReadLineColor();
                 Console.Write("OIB?"); var personOIB = int.Parse(ReadLineColor());
-                Console.Write("Broj mobitela?"); var personPhoneNum = ReadLineColor();
+                Console.Write("Broj mobitela?"); var personPhoneNum = int.Parse(ReadLineColor());
 
                 var person = new Person(personName, personSurname, personOIB, personPhoneNum);
 

@@ -76,6 +76,20 @@ namespace Internship_3_oop_intro
             }
         }
 
+        static void SubMenuHandleByChoice(int userChoice, Dictionary<Event, List <Person>> eventList){
+            switch(userChoice){
+                case 1:
+                    PrintEventDetails(eventList);
+                    break;
+                case 2:
+                    PrintPersonDetails(eventList);
+                    break;
+                case 3:
+                    PrintAllDetails(eventList);
+                    break;
+            }
+        }
+
         static void MainMenuHandleByChoice(int userChoice, Dictionary<Event, List <Person>> eventList){
             switch(userChoice){
                 case 1:
@@ -91,9 +105,14 @@ namespace Internship_3_oop_intro
                     AddPersonToEvent(eventList);
                     break;
                 case 5:
+                    RemovePersonFromEvent(eventList);
                     break;
                 case 6:
-                    while(PrintSubMenuEventDetailsAndGetUserInput()!= 4);
+                    int subMenuChoice;
+                    do{
+                        subMenuChoice = PrintSubMenuEventDetailsAndGetUserInput();
+                        SubMenuHandleByChoice(subMenuChoice,eventList);
+                    }while(subMenuChoice != 4);
                     break;
                 case 7:
                     Environment.Exit(0);    
@@ -193,17 +212,32 @@ namespace Internship_3_oop_intro
             return false;
         }
 
-        static bool IsPeronOIBValid(Person person, Dictionary<Event, List<Person>> eventList, out string msg){
+        static bool IsPersonOIBUnique(Person person, Dictionary<Event, List<Person>> eventList){
             foreach(var attendents in eventList.Values){
                 foreach(var attendent in attendents){
-                    if(attendent.OIB == person.OIB && person != attendent){
-                        msg = "Dvije osobe nemogu imati isti OIB!";
+                    if(attendent.OIB == person.OIB && !attendent.IsTheSamePersonAs(person)){
                         return false;
                     }
+                }   
+            }
+            return true;
+        }
+        static bool IsPersonAtEvent(Person person, List<Person> attendentsAtEvent){
+            foreach(var attendent in attendentsAtEvent){
+                if(attendent.OIB == person.OIB){
+                    return true;
                 }
             }
-            msg = "";
-            return true;
+            return false;
+        }
+
+        static Person GetPersonByOIB(int oib, List<Person> attendentsAtEvent){
+            foreach(var attendent in attendentsAtEvent){
+                if(attendent.OIB == oib){
+                    return attendent;
+                }
+            }
+            return null;
         }
         
         static void WarningMessage(string msg){
@@ -224,10 +258,6 @@ namespace Internship_3_oop_intro
             Console.ForegroundColor = ConsoleColor.White;
             ReadLineColor();
         }
-
-
-
-
         static string ReadLineColor(){
             Console.ForegroundColor = ConsoleColor.Cyan;
             string input = Console.ReadLine();
@@ -353,23 +383,67 @@ namespace Internship_3_oop_intro
 
                 var person = new Person(personName, personSurname, personOIB, personPhoneNum);
 
-                if(IsPeronOIBValid(person, eventList, out string msg)){
+                if(IsPersonOIBUnique(person, eventList)){
                     Console.WriteLine();
                     Console.Write("Na koji event covik ide?");
                     if(GetEventKeyByName(ReadLineColor(), eventList, out var eventKey)){
-                        eventList[eventKey].Add(person);
+                        if(!IsPersonAtEvent(person, eventList[eventKey])){
+                            if(UserConfirmation()){
+                                System.Console.WriteLine("Osoba dodana na event");
+                                eventList[eventKey].Add(person);
+                            }else{
+                                System.Console.WriteLine("Vracam se na menu");
+                            }
+                        }else{
+                            InvalidInputMessage("Osoba je vec na eventu");
+                        }                            
                     }else{
                         InvalidInputMessage("Ne postoji uneseni event");
                     }
                 }else{
-                    InvalidInputMessage(msg);
+                    InvalidInputMessage("Krađa identiteta?");
                 }
 
             }catch{
-                InvalidInputMessage("Podaci covjeka nisu ispravni :(");
-            }
+                InvalidInputMessage("Podaci su krivog formata :(");
+            }            
+        }
 
-            
+        static void RemovePersonFromEvent(Dictionary<Event, List<Person>> eventList){
+            Console.Clear();
+            System.Console.WriteLine("Zelite ukloniti osobu sa eventa?");
+
+            try{
+                Console.Write("Ime eventa?"); var eventName = ReadLineColor();
+                Console.Write("OIB osobe?"); var personOIB = int.Parse(ReadLineColor());
+
+                if(GetEventKeyByName(eventName, eventList, out var eventKey)){
+                    if(IsPersonAtEvent(new Person(personOIB), eventList[eventKey])){
+                        if(UserConfirmation()){
+                            eventList[eventKey].Remove(GetPersonByOIB(personOIB, eventList[eventKey]));
+                            System.Console.WriteLine("Osoba uklonjena");
+                        }else{
+                            System.Console.WriteLine("Vracam se na menu");
+                        }
+                    }else{
+                        InvalidInputMessage("Osoba uopce nije na eventu");
+                    }
+                }else{
+                    InvalidInputMessage("Ne postoji uneseni event");
+                }
+            }catch{
+                InvalidInputMessage("Podaci su krivog formata :(");
+            }
+        }
+
+        static void PrintEventDetails(Dictionary<Event, List<Person>> eventList){
+
+        }
+        static void PrintPersonDetails(Dictionary<Event, List<Person>> eventList){
+
+        }
+        static void PrintAllDetails(Dictionary<Event, List<Person>> eventList){
+
         }
     }
 }

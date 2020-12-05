@@ -444,6 +444,7 @@ namespace Internship_3_oop_intro
         /////////////////////////
         static void PrintEventDetails(Dictionary<Event, List<Person>> eventList){
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Blue;
             foreach(var pair in eventList){
                 System.Console.WriteLine(
                     pair.Key.Name + " - " + pair.Key.EventType + " - " + 
@@ -452,16 +453,24 @@ namespace Internship_3_oop_intro
                     pair.Value.Count + " prijava"
                 );
             }
+            Console.ForegroundColor = ConsoleColor.White;
         }
         static void PrintPersonDetails(Dictionary<Event, List<Person>> eventList){
             Console.Clear();
             var i = 1;
             foreach(var pair in eventList){
+                Console.ForegroundColor = ConsoleColor.Blue;
                 System.Console.WriteLine(pair.Key.Name);
-                foreach(var person in pair.Value){
-                    System.Console.Write("- " + i + ". ");
-                    System.Console.WriteLine(person.FirstName + " " + person.LastName + " - " + person.PhoneNumber);
-                    i++;
+                Console.ForegroundColor = ConsoleColor.White;
+
+                if(pair.Value.Count > 0){
+                    foreach(var person in pair.Value){
+                        System.Console.Write("- " + i + ". ");
+                        System.Console.WriteLine(person.FirstName + " " + person.LastName + " - " + person.PhoneNumber);
+                        i++;
+                    }
+                }else{
+                    System.Console.WriteLine("- nema sudionika");
                 }
             }
         }
@@ -477,10 +486,14 @@ namespace Internship_3_oop_intro
                 );
                 Console.ForegroundColor = ConsoleColor.White;
                 var i = 1;
-                foreach(var person in pair.Value){
-                    System.Console.Write("- " + i + ". ");
-                    System.Console.WriteLine(person.FirstName + " " + person.LastName + " - " + person.PhoneNumber);
-                    i++;
+                if(pair.Value.Count > 0){
+                    foreach(var person in pair.Value){
+                        System.Console.Write("- " + i + ". ");
+                        System.Console.WriteLine(person.FirstName + " " + person.LastName + " - " + person.PhoneNumber);
+                        i++;
+                    }
+                }else{
+                    System.Console.WriteLine("- nema sudionika");
                 }
             }
         }

@@ -162,22 +162,47 @@ namespace Internship_3_oop_intro
         }
 
         static bool CheckDateTimeValidity(DateTime startTime, DateTime endTime, Dictionary<Event, List<Person>> eventList){
+            
+            Console.ForegroundColor = ConsoleColor.DarkRed;
             if(startTime > endTime){
                 System.Console.WriteLine("Event nemoze zavrsiti prije nego pocne");
+                Console.ForegroundColor = ConsoleColor.White;
                 return false;
             }
-            // ------1-------2---2---1-----
+            if(AreEventTimesOverlapping(startTime, endTime, eventList, out List<string> overlappingEventNames)){
+                System.Console.WriteLine("Event se preklapa sa drugim eventima: ");
+                foreach(var name in overlappingEventNames){
+                    Console.WriteLine("- " + name);
+                }
+                Console.ForegroundColor = ConsoleColor.White;
+                return false;
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+            return true;
+            
+        }
+
+        static bool AreEventTimesOverlapping(DateTime startTime, DateTime endTime, Dictionary<Event, List<Person>> eventList, out List<string> overlappingEventNames){
             var overlap = false;
+            overlappingEventNames = new List<string>(){};
             foreach(var _event in eventList.Keys){
                 if(!(startTime > _event.EndTime || endTime < _event.StartTime)){
-                    System.Console.WriteLine($"Event se preklapa sa \"{_event.Name}\"");
+                    overlappingEventNames.Add(_event.Name);
                     overlap = true;
                 }
             }
-            if(overlap){return false;}
+            return overlap;
+        }
 
-            return true;
-            
+        static bool GetEventKeyByName(string name, Dictionary<Event, List<Person>> eventList, out Event result){
+            foreach(var _event in eventList.Keys){
+                if(name == _event.Name){
+                    result = _event;
+                    return true;
+                }
+            }
+            result = null;
+            return false;
         }
         
         ////////////////////////////
@@ -239,17 +264,11 @@ namespace Internship_3_oop_intro
 
         static void DeleteEvent(Dictionary<Event, List<Person>> eventList){
             Console.Clear();
-            System.Console.WriteLine("Unesite naziv eventa koji zelite unijeti");
+            System.Console.WriteLine("Unesite naziv eventa koji zelite izbrisati");
             var userInput = Console.ReadLine();
 
-            var toDelete = new Event();
-            foreach(var _event in eventList.Keys){
-                if(userInput == _event.Name){
-                    toDelete = _event;
-                }
-            }
-
-            if(eventList.Remove(toDelete)){
+            if(GetEventKeyByName(userInput, eventList, out Event key)){
+                eventList.Remove(key);
                 System.Console.WriteLine("Event deleted");
             }else{
                 System.Console.WriteLine("Could not find {0}", userInput);
@@ -258,9 +277,23 @@ namespace Internship_3_oop_intro
             PressEnterToContinue();
         }
 
+
+
         static void EditEvent(Dictionary<Event, List<Person>> eventList){
             Console.Clear();
+            System.Console.WriteLine("Unesite naziv eventa koji zelite editati");
+            var userInput = Console.ReadLine();
+            
+            if(GetEventKeyByName(userInput, eventList, out Event key)){
+                System.Console.WriteLine("");
+                
 
+            }else{
+                System.Console.WriteLine("Could not find {0}", userInput);
+            }
+
+            PressEnterToContinue();
+            
             
         }
     }

@@ -23,5 +23,13 @@ namespace Internship_3_oop_intro
         public DateTime StartTime{get;set;}
         public DateTime EndTime{get;set;}
 
+        public void Update(string name, EventTypeEnum eventType,
+                    DateTime startTime, DateTime endTime){            
+            Name = name;
+            EventType = eventType;
+            StartTime = startTime;
+            EndTime = endTime;            
+        }
+
     }
 }

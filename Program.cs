@@ -112,6 +112,8 @@ namespace Internship_3_oop_intro
                     do{
                         subMenuChoice = PrintSubMenuEventDetailsAndGetUserInput();
                         SubMenuHandleByChoice(subMenuChoice,eventList);
+
+                        if(subMenuChoice != 4) PressEnterToContinue();
                     }while(subMenuChoice != 4);
                     break;
                 case 7:
@@ -379,7 +381,7 @@ namespace Internship_3_oop_intro
                 Console.Write("Ime?"); var personName = ReadLineColor();
                 Console.Write("Prezime?"); var personSurname = ReadLineColor();
                 Console.Write("OIB?"); var personOIB = int.Parse(ReadLineColor());
-                Console.Write("Broj mobitela?"); var personPhoneNum = int.Parse(ReadLineColor());
+                Console.Write("Broj mobitela?"); var personPhoneNum = ReadLineColor();
 
                 var person = new Person(personName, personSurname, personOIB, personPhoneNum);
 
@@ -436,11 +438,32 @@ namespace Internship_3_oop_intro
             }
         }
 
-        static void PrintEventDetails(Dictionary<Event, List<Person>> eventList){
 
+        /////////////////////////
+        //  SUBMENU FUNCTIONS  //
+        /////////////////////////
+        static void PrintEventDetails(Dictionary<Event, List<Person>> eventList){
+            Console.Clear();
+            foreach(var pair in eventList){
+                System.Console.WriteLine(
+                    pair.Key.Name + " - " + pair.Key.EventType + " - " + 
+                    pair.Key.StartTime + " - " + pair.Key.EndTime + " - " +
+                    (pair.Key.EndTime - pair.Key.StartTime) + " - " +
+                    pair.Value.Count + " prijava"
+                );
+            }
         }
         static void PrintPersonDetails(Dictionary<Event, List<Person>> eventList){
-
+            Console.Clear();
+            var i = 1;
+            foreach(var pair in eventList){
+                System.Console.WriteLine(pair.Key.Name);
+                foreach(var person in pair.Value){
+                    System.Console.Write("- " + i + ". ");
+                    System.Console.WriteLine(person.FirstName + " " + person.LastName + " - " + person.PhoneNumber);
+                    i++;
+                }
+            }
         }
         static void PrintAllDetails(Dictionary<Event, List<Person>> eventList){
 

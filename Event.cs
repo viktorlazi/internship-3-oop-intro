@@ -19,7 +19,8 @@ namespace Internship_3_oop_intro
         public string Name {get;set;}
        
 
-        EventTypeEnum EventType{get;set;}
+        public EventTypeEnum EventType{get;set;}
+
         public DateTime StartTime{get;set;}
         public DateTime EndTime{get;set;}
 

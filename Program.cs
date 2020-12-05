@@ -466,7 +466,23 @@ namespace Internship_3_oop_intro
             }
         }
         static void PrintAllDetails(Dictionary<Event, List<Person>> eventList){
-
+            Console.Clear();
+            foreach(var pair in eventList){
+                Console.ForegroundColor = ConsoleColor.Blue;
+                System.Console.WriteLine(
+                    pair.Key.Name + " - " + pair.Key.EventType + " - " + 
+                    pair.Key.StartTime + " - " + pair.Key.EndTime + " - " +
+                    (pair.Key.EndTime - pair.Key.StartTime) + " - " +
+                    pair.Value.Count + " prijava"
+                );
+                Console.ForegroundColor = ConsoleColor.White;
+                var i = 1;
+                foreach(var person in pair.Value){
+                    System.Console.Write("- " + i + ". ");
+                    System.Console.WriteLine(person.FirstName + " " + person.LastName + " - " + person.PhoneNumber);
+                    i++;
+                }
+            }
         }
     }
 }
